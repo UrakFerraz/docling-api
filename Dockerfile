@@ -1,12 +1,11 @@
-# Dockerfile (Corrigido)
+# Dockerfile (Corrigido Novamente)
 FROM python:3.11-slim
 
-# --- INÍCIO DA CORREÇÃO ---
-# Instala dependências de sistema (libGL) exigidas pelo docling
+# Instala dependências de sistema (libGL e libgthread)
 RUN apt-get update && apt-get install -y \
     libgl1 \
+    libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
-# --- FIM DA CORREÇÃO ---
 
 # Define o diretório de trabalho
 WORKDIR /app
@@ -21,7 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expõe a porta que a aplicação vai rodar
-EXPOSE 8080
+EXPOSE 8081
 
 # Comando para rodar a aplicação
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8081"]
