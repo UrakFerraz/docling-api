@@ -1,0 +1,16 @@
+# docker-compose.yml
+version: "3.8"
+services:
+  docling:
+    build: .
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./:/app
+    networks:
+      docling-api:
+
+networks:
+  docling-api:
+    external:
+      name: shared_network
