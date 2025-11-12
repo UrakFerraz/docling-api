@@ -65,6 +65,15 @@ Supondo que você tenha um arquivo chamado meu_documento.pdf no mesmo diretório
 curl -X POST -F "file=@./meu_documento.pdf" [http://127.0.0.1:8080/convert_pdf_to_markdown/](http://127.0.0.1:8080/convert_pdf_to_markdown/)
 ```
 
+```bash
+# 1. Baixa o PDF da URL e salva como "sample.pdf"
+curl -o sample.pdf "https://sample-files.com/downloads/documents/pdf/basic-text.pdf"
+
+# 2. Envia o arquivo "sample.pdf" baixado para a sua API
+curl -X POST -F "file=@./sample.pdf" http://127.0.0.1:8080/convert_pdf_to_markdown/
+```
+
+
 Resposta Esperada
 A API retornará um objeto JSON contendo o texto extraído do PDF em formato Markdown:
 
