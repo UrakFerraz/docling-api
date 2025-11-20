@@ -8,30 +8,30 @@ app = FastAPI()
 
 @app.post("/convert_pdf_to_markdown/")
 async def convert_pdf_to_markdown(file: UploadFile = File(...)):
-    if file.content_type != "application/pdf":
-        raise HTTPException(status_code=400, detail="Invalid file type. Only PDF files are allowed.")
+  if file.content_type != "application/pdf":
+    raise HTTPException(status_code=400, detail="Invalid file type. Only PDF files are allowed.")
 
-    temp_file_path = Path(f"./temp_{file.filename}")
+  temp_file_path = Path(f"./temp_{file.filename}")
 
-    try:
-        with open(temp_file_path, "wb") as f:
-            f.write(await file.read())
+  try:
+    with open(temp_file_path, "wb") as f:
+        f.write(await file.read())
 
-        #
-        # --- ESTA É A MUDANÇA ---
-        # Removemos todos os argumentos (ocr_backend, etc.)
-        # A biblioteca agora deve usar os defaults automaticamente.
-        #
-        converter = DocumentConverter()
+    #
+    # --- ESTA É A MUDANÇA ---
+    # Removemos todos os argumentos (ocr_backend, etc.)
+    # A biblioteca agora deve usar os defaults automaticamente.
+    #
+    converter = DocumentConverter()
 
-        result = converter.convert(str(temp_file_path))
-        markdown_output = result.document.export_to_markdown()
+    result = converter.convert(str(temp_file_path))
+    markdown_output = result.document.export_to_markdown()
 
+    temp_file_path.unlink()
+
+    return {"markdown": markdown_output}
+
+  except Exception as e:
+    if temp_file_path.exists():
         temp_file_path.unlink()
-
-        return {"markdown": markdown_output}
-
-    except Exception as e:
-        if temp_file_path.exists():
-            temp_file_path.unlink()
-        raise HTTPException(status_code=500, detail=f"An error occurred during conversion: {str(e)}")
+    raise HTTPException(status_code=500, detail=f"An error occurred during conversion: {str(e)}")
